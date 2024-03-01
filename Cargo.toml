@@ -3,7 +3,6 @@ name = "zkp-poc"
 version = "0.1.0"
 edition = "2021"
 
-
 [[bin]]
 name = "server"
 path = "src/server.rs"
@@ -13,9 +12,21 @@ name = "client"
 path = "src/client.rs"
 
 [dependencies]
+num-bigint = { version = "0.4", features = ["rand"] }
+rand = "0.8"
 tonic = "0.11"
 prost = "0.12"
 tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
+uuid = { version = "1.7", features = ["v4", "fast-rng", "macro-diagnostics"] }
+
+[dev-dependencies]
+proptest = "1.4"
 
 [build-dependencies]
 tonic-build = "0.11"
+
+[profile.release]
+codegen-units = 1
+lto = "fat"
+opt-level = 3
+strip = true
