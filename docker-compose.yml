@@ -1,0 +1,9 @@
+services:
+  server:
+    image: zkp-poc-server:latest
+    ports:
+      - 50051:50051
+  client:
+    image: zkp-poc-client:latest
+    depends_on: [server]
+    command: ["/usr/local/bin/client", "http://server:50051"]
