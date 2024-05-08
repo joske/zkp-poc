@@ -1,5 +1,6 @@
 use num_bigint::BigUint;
-use std::{collections::HashMap, sync::Mutex};
+use std::collections::HashMap;
+use tokio::sync::Mutex;
 use tonic::{transport::Server, Request, Response, Status};
 use uuid::Uuid;
 use zkp_auth::auth_server::{Auth, AuthServer};
@@ -39,7 +40,7 @@ impl Auth for MyAuth {
         };
         self.users
             .lock()
-            .map_err(|_| Status::internal("failed to get lock"))?
+            .await
             .insert(request.get_ref().user.clone(), user_info);
 
         println!("User {} registered!", request.get_ref().user);
@@ -53,10 +54,7 @@ impl Auth for MyAuth {
         request: Request<zkp_auth::AuthenticationChallengeRequest>,
     ) -> Result<Response<zkp_auth::AuthenticationChallengeResponse>, Status> {
         let user_id = request.get_ref().user.clone();
-        let users = &mut self
-            .users
-            .lock()
-            .map_err(|_| Status::internal("failed to get lock"))?;
+        let users = &mut self.users.lock().await;
         let Some(user_info) = users.get_mut(&user_id) else {
             return Err(Status::not_found("User not found"));
         };
@@ -70,7 +68,7 @@ impl Auth for MyAuth {
 
         self.challenges
             .lock()
-            .map_err(|_| Status::internal("failed to get lock"))?
+            .await
             .insert(auth_id.clone(), user_id.clone());
         let reply = zkp_auth::AuthenticationChallengeResponse {
             auth_id,
@@ -85,19 +83,13 @@ impl Auth for MyAuth {
         &self,
         request: Request<zkp_auth::AuthenticationAnswerRequest>,
     ) -> Result<Response<zkp_auth::AuthenticationAnswerResponse>, Status> {
-        let challenges = &mut self
-            .challenges
-            .lock()
-            .map_err(|_| Status::internal("failed to get lock"))?;
+        let challenges = &mut self.challenges.lock().await;
 
         let Some(user_id) = challenges.get_mut(&request.get_ref().auth_id) else {
             return Err(Status::not_found("Challenge not found"));
         };
 
-        let users = &mut self
-            .users
-            .lock()
-            .map_err(|_| Status::internal("failed to get lock"))?;
+        let users = &mut self.users.lock().await;
         let Some(user_info) = users.get_mut(user_id) else {
             return Err(Status::not_found("User not found"));
         };
