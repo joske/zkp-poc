@@ -14,16 +14,16 @@ path = "src/client.rs"
 [dependencies]
 num-bigint = { version = "0.4", features = ["rand"] }
 rand = "0.8"
-tonic = "0.11"
-prost = "0.12"
-tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
-uuid = { version = "1.7", features = ["v4", "fast-rng", "macro-diagnostics"] }
+tonic = "0.12"
+prost = "0.13"
+tokio = { version = "1.42", features = ["macros", "rt-multi-thread"] }
+uuid = { version = "1.11", features = ["v4", "fast-rng", "macro-diagnostics"] }
 
 [dev-dependencies]
-proptest = "1.4"
+proptest = "1.6"
 
 [build-dependencies]
-tonic-build = "0.11"
+tonic-build = "0.12"
 
 [profile.release]
 codegen-units = 1
