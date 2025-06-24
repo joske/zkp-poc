@@ -15,7 +15,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let url = std::env::args()
         .nth(2)
         .unwrap_or("http://127.0.0.1:50051".to_string());
-    println!("Connecting to {}", url);
+    println!("Connecting to {url}");
     let mut client = AuthClient::connect(url).await?;
 
     // hardcoded user

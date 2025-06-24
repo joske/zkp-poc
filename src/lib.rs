@@ -167,7 +167,7 @@ mod tests {
             let r1 = modpow(g, k, p);
             let r2 = modpow(h, k, p);
             let s = calculate_response(x, k, c, q);
-            assert!(verify(&s, &r1, &r2, &c, &y1, &y2, g, h, p));
+            assert!(verify(&s, &r1, &r2, c, &y1, &y2, g, h, p));
         }
     }
 }
