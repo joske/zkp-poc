@@ -12,22 +12,22 @@ name = "client"
 path = "src/client.rs"
 
 [dependencies]
-num-bigint = { version = "0.4", features = ["rand"] }
-rand = "0.8"
+num-bigint = "0.4"
+prost = "0.14"
+rand = "0.10"
+tokio = { version = "1.52", features = ["macros", "rt-multi-thread"] }
 tonic = "0.14"
 tonic-prost = "0.14"
-prost = "0.14"
-tokio = { version = "1.47", features = ["macros", "rt-multi-thread"] }
-uuid = { version = "1.18", features = ["v4", "fast-rng", "macro-diagnostics"] }
+uuid = { version = "1.23", features = ["fast-rng", "macro-diagnostics", "v4"] }
 
 [dev-dependencies]
-proptest = "1.6"
+proptest = "1.11"
 
 [build-dependencies]
 tonic-prost-build = "0.14"
 
 [profile.release]
-codegen-units = 1
-lto = "fat"
 opt-level = 3
 strip = true
+lto = "fat"
+codegen-units = 1

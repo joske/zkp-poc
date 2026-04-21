@@ -1,4 +1,5 @@
-use num_bigint::{BigUint, RandBigInt};
+use num_bigint::BigUint;
+use rand::Rng;
 
 // P & Q from https://tools.ietf.org/html/rfc3526#section-3
 pub const P: &[u8] = &[
@@ -41,7 +42,9 @@ pub fn encode(n: &BigUint) -> Vec<u8> {
 }
 
 pub fn random_number() -> BigUint {
-    rand::thread_rng().gen_biguint(64)
+    let mut bytes = [0u8; 8];
+    rand::rng().fill_bytes(&mut bytes);
+    BigUint::from_bytes_be(&bytes)
 }
 
 pub fn modpow(x: &BigUint, exp: &BigUint, p: &BigUint) -> BigUint {
